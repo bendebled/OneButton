@@ -37,6 +37,8 @@ public:
   // set # millisec after press is assumed.
   void setPressTicks(int ticks);
 
+  unsigned long getLastActivityTime();
+
   // attach functions that will be called when button was pressed in the specified way.
   void attachClick(callbackFunction newFunction);
   void attachDoubleClick(callbackFunction newFunction);
@@ -48,13 +50,23 @@ public:
   // ----- State machine functions -----
 
   // call this function every some milliseconds for handling button events.
-  void tick(void);
+  int tick(void);
   bool isLongPressed();
+  bool isPressed();
+  bool isReleased();
 
+  const int CLICK_STATE = 1;
+  const int DOUBLE_CLICK_STATE = 2;
+  const int LONG_PRESS_START_STATE = 3;
+  const int DURING_LONG_PRESS_STATE = 4;
+  const int LONG_PRESS_STOP_STATE = 5;
+  const int PRESSED_STATE = 6;
+  
 private:
   int _pin;        // hardware pin number. 
   int _clickTicks; // number of ticks that have to pass by before a click is detected
   int _pressTicks; // number of ticks that have to pass by before a lonn button press is detected
+  unsigned long _lastActivityTime;
 
   int _buttonReleased;
   int _buttonPressed;
